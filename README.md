@@ -31,3 +31,10 @@ It is pretty easy
 cd themes/PaperMod
 git pull
 ```
+
+#### Template customization
+
+Started working off example site from [here](https://github.com/adityatelange/hugo-PaperMod/tree/exampleSite):
+
+- config.yml - update baseURL, title and googleAnalytics.
+
