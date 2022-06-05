@@ -106,7 +106,10 @@ outputs:
         - JSON
 
 params:
-    env: production # to enable google analytics, opengraph, twitter-cards and schema.
+    mainSections:
+    - posts
+    - linux
+    env: production
     description: "Theme PaperMod - https://github.com/adityatelange/hugo-PaperMod"
     author: Theme PaperMod
     # author: ["Me", "You"] # multiple authors
