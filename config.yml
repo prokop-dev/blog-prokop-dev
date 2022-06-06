@@ -107,6 +107,7 @@ outputs:
 
 params:
     mainSections:
+    - java
     - posts
     - linux
     env: production
