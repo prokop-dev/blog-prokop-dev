@@ -36,6 +36,25 @@ TBD
 
 Change eth0 MTU to 1508 and pppoe0 to 1500. Then test if Internet still works.
 
+This can be tested from Windows Command Prompt:
+
+```
+# 1472(payload) + 8(ICMP) + 20(IP) = 1500 MTU
+
+C:\Users\bart>ping www.yahoo.com -f -l 1472
+
+Pinging new-fp-shed.wg1.b.yahoo.com [87.248.100.215] with 1472 bytes of data:
+Reply from 87.248.100.215: bytes=1472 time=26ms TTL=56
+Reply from 87.248.100.215: bytes=1472 time=25ms TTL=56
+Reply from 87.248.100.215: bytes=1472 time=25ms TTL=56
+Reply from 87.248.100.215: bytes=1472 time=27ms TTL=56
+
+Ping statistics for 87.248.100.215:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 25ms, Maximum = 27ms, Average = 25ms
+```
+
 ## Give description to pppe0 interface
 
 This will make EdgeOS Dashboard a little more readable.
@@ -44,15 +63,41 @@ This will make EdgeOS Dashboard a little more readable.
 set interfaces ethernet eth0 pppoe 0 description "Vodafone Broadband"
 ```
 
+## Some system settings
+
+Not essential, but were desired for my outer model:
+
+```bash
+configure
+
+set system domain-name mydomain.tld
+set system host-name mycity
+commit
+
+delete service gui older-ciphers
+delete system offload hwnat
+commit
+
+save
+exit
+```
+
 # Firewall fixes
 
 ## Enable IGMP
 
-TBD
+It will allow to ping router externally.
+
+```bash
+set firewall name WAN_LOCAL rule 30 action accept
+set firewall name WAN_LOCAL rule 30 description "Allow ICMP"
+set firewall name WAN_LOCAL rule 30 log disable
+set firewall name WAN_LOCAL rule 30 protocol icmp
+```
 
 ## Remove generic MSS clamping
 
-The wizard creates pretty annoying entry in firewall options setting clamping MSS at 1412 octets. If you run Speed Guide TCP Analyzer, you will fins the following, showing that original increase of MTU to 1500 on broadband iterface was not effective.
+The wizard creates pretty annoying entry in firewall options setting clamping MSS at 1412 octets. If you run [Speed Guide TCP Analyzer](https://www.speedguide.net/analyzer.php), you will fins the following, showing that original increase of MTU to 1500 on broadband interface was not effective.
 
 ```
 MTU = 1452
@@ -68,7 +113,14 @@ It seems that removing firewall options completely is effective solution here.
 delete firewall options
 ```
 
-YMMV
+YMMV, but it worked for me:
+
+```
+MTU = 1500
+MTU is fully optimized for broadband.
+MSS = 1460
+Maximum useful data in each packet = 1460, which equals MSS.
+```
 
 # Dynamic DNS with Google Domains
 
