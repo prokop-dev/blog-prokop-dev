@@ -74,8 +74,7 @@ set system domain-name mydomain.tld
 set system host-name mycity
 commit
 
-delete service gui older-ciphers
-delete system offload hwnat
+set service gui older-ciphers disable
 commit
 
 save
@@ -162,3 +161,55 @@ set service dns dynamic interface pppoe0 service custom-google login generated-u
 set service dns dynamic interface pppoe0 service custom-google password genereated-password
 ```
 
+# IPv6 with Hurricane Electric Tunnel Broker
+
+First request [new tunnel here](https://tunnelbroker.net/new_tunnel.php).
+
+As we use dynamic IP, it is important to keep our end up-to-date. We need to set-up another ddclient instance.
+The example `TUNNELID` and an `UPDATEKEY` can be found in the Advanced tab of the Tunnel Details page.
+
+```bash
+set service dns dynamic interface pppoe0 service custom-he protocol dyndns2
+set service dns dynamic interface pppoe0 service custom-he server ipv4.tunnelbroker.net
+set service dns dynamic interface pppoe0 service custom-he host-name TUNNELID
+set service dns dynamic interface pppoe0 service custom-he login USERNAME
+set service dns dynamic interface pppoe0 service custom-he password UPDATEKEY
+```
+
+This introduces the following change to configuration:
+
+```
++                service custom-he {
++                    host-name TUNNELID
++                    login USERNAME
++                    password UPDATEKEY
++                    protocol dyndns2
++                    server ipv4.tunnelbroker.net
++                }
+```
+
+Now we can create tunnel interface. Values separated with underscore relate to HE Tunnel page.
+
+```bash
+set interfaces tunnel tun0 encapsulation sit
+set interfaces tunnel tun0 description "HE.net IPv6 Tunnel"
+set interfaces tunnel tun0 local-ip 0.0.0.0
+set interfaces tunnel tun0 remote-ip Server_IPv4_Address
+set interfaces tunnel tun0 address Client_IPv6_Address
+```
+
+Commit interface definition and try to ping HE end of tunnel.
+
+```bash
+commit
+ping6 Server_IPv6_Address
+```
+
+Add a default route that routes all IPv6 traffic over the tunnel. Commit and try to ping `google.com`.
+
+```bash
+set protocols static interface-route6 ::/0 next-hop-interface tun0
+
+commit
+ping google.com
+```
