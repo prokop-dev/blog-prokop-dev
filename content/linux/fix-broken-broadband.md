@@ -227,9 +227,36 @@ commit
 ping google.com
 ```
 
-At this point it might be prudent to enable hardware offloading for IPv6 forwarding.
+At this point it might be prudent to enable hardware offloading for IPv6 forwarding, as it seems to be disabled by default.
+
+```
+$ show ubnt offload
+
+IP offload module   : loaded
+IPv4
+  forwarding: enabled
+  vlan      : disabled
+  pppoe     : enabled
+  gre       : disabled
+  bonding   : disabled
+IPv6
+  forwarding: disabled
+  vlan      : disabled
+  pppoe     : disabled
+  bonding   : disabled
+
+IPSec offload module: loaded
+
+Traffic Analysis    :
+  export    : disabled
+  dpi       : disabled
+    version       : 1.564
+```
+
+To enable offloading, invoke the following commands.
 
 ```bash
+configure
 set system offload ipv6 forwarding enable
 commit
 save
@@ -290,7 +317,7 @@ set interfaces tunnel tun0 firewall in ipv6-name WANv6_IN
 set interfaces tunnel tun0 firewall local ipv6-name WANv6_LOCAL
 ```
 
-Executing above commands will result in this addition to config file:
+Executing above commands will result in below addition to `/config/config.boot` file:
 
 ```
      tunnel tun0 {
@@ -337,5 +364,43 @@ PORT     STATE  SERVICE
 9999/tcp closed abyss
 
 Nmap done: 1 IP address (1 host up) scanned in 41.30 seconds
+```
+
+It still makes a sense to check if WAN interface is pingable, using some [external ping6 test](https://tools.keycdn.com/ipv6-ping).
+
+## Gift of IPv6 to local networks
+
+If you have more than one LAN, then request `/48` prefix via Tunnel Broker web page.
+
+### Setting up routable /64 for single LAN segment
+
+Those two configuration commands should do the job with "routable /64 prefix".
+Copy the relevant information from "Routed IPv6 Prefixes" from tunnelbroker.net.
+For adding the IPv6 address, just assign first one available `::1` in the subnet to router LAN interface.
+
+```bash
+set interfaces ethernet eth1 address 2001:470:****:****::1/64
+commit
+
+set interfaces ethernet eth1 ipv6 router-advert prefix 2001:470:****:****::/64
+commit
+```
+
+## Poor performance
+
+Unfortunatelly there is no hardware offloading for SIT tunnels. It means performance will be restricted to something like less than 100Mbit/s.
+The best test is to try download large file from Internet - [Tele2 is hosting such file](http://speedtest.tele2.net/) using both IPv4 and IPv6.
+Here are my results when pulling 10GB file from server connected via Ethernet cable (my broadband is 500Mbit down FTTH).
+The IPv6 test was maxing router CPU at 100%.
+
+```
+➜  ~ curl -4 http://speedtest.tele2.net/10GB.zip > /dev/null
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 10.0G  100 10.0G    0     0  53.7M      0  0:03:10  0:03:10 --:--:-- 57.0M
+➜  ~ curl -6 http://speedtest.tele2.net/10GB.zip > /dev/null
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+ 18 10.0G   18 1919M    0     0  9703k      0  0:18:00  0:03:22  0:14:38 9805k
 ```
 
