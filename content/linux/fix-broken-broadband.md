@@ -26,7 +26,16 @@ There are two:
 1. Call ISP and get your PPPoE username and password. Quite oftern you need make few calls/online chats.
 2. Bin the provided "router" and connect something decent to ONT. I will use EdgeRouter.
 
+## End goal
+
+Get as much as possible out of bad "consumer grade" service by leveraging Ubiquiti EdgeRouter.
+Target state:
+
+TBD_PICTURE
+
 # Standard setup
+
+This describes general procedure just to get connectivity in place plus some tweaks.
 
 ## Basic Wizard
 
@@ -165,6 +174,8 @@ set service dns dynamic interface pppoe0 service custom-google password genereat
 
 First request [new tunnel here](https://tunnelbroker.net/new_tunnel.php).
 
+## Automate local IPv4 endpoint updates
+
 As we use dynamic IP, it is important to keep our end up-to-date. We need to set-up another ddclient instance.
 The example `TUNNELID` and an `UPDATEKEY` can be found in the Advanced tab of the Tunnel Details page.
 
@@ -187,6 +198,8 @@ This introduces the following change to configuration:
 +                    server ipv4.tunnelbroker.net
 +                }
 ```
+
+## Create Tunnel Interface
 
 Now we can create tunnel interface. Values separated with underscore relate to HE Tunnel page.
 
@@ -213,3 +226,116 @@ set protocols static interface-route6 ::/0 next-hop-interface tun0
 commit
 ping google.com
 ```
+
+At this point it might be prudent to enable hardware offloading for IPv6 forwarding.
+
+```bash
+set system offload ipv6 forwarding enable
+commit
+save
+exit
+```
+
+At this time rebooting router might be good idea. Then check if everything still works as expected.
+
+## Security of IPv6 tunnel
+
+Hurricane Electric Tunnel Broker offers decent [port scan](https://tunnelbroker.net/portscan.php) facility.
+Here is the outcome of scanning my IPv6 WAN interface:
+
+```
+Starting Nmap 7.01 ( https://nmap.org ) at 2022-06-26 05:19 PDT
+Nmap scan report for tunnel******-pt.tunnel.tserv1.****.ipv6.he.net (2001:470:****:**::2)
+Host is up (0.14s latency).
+Not shown: 995 closed ports
+PORT      STATE SERVICE
+22/tcp    open  ssh
+53/tcp    open  domain
+80/tcp    open  http
+443/tcp   open  https
+10001/tcp open  scp-config
+
+Nmap done: 1 IP address (1 host up) scanned in 9.38 seconds
+```
+
+This flags the lack of firewall on `tun0` interface.
+The Wizard, we have run initially has created WANv6_IN and WANv6_LOCAL firewall rules.
+Those rules have been applied to pppoe0 interface (along the corresponsinf IPv4 rules).
+
+```
+        pppoe 0 {
+            default-route auto
+            description "Vodafone Broadband"
+            firewall {
+                in {
+                    ipv6-name WANv6_IN
+                    name WAN_IN
+                }
+                local {
+                    ipv6-name WANv6_LOCAL
+                    name WAN_LOCAL
+                }
+            }
+            mtu 1500
+            name-server auto
+            password *********
+            user-id dsl*********@broadband.vodafone.co.uk
+        }
+```
+
+We will assign now IPv6 firewall rules and re-run port scan.
+
+```bash
+set interfaces tunnel tun0 firewall in ipv6-name WANv6_IN
+set interfaces tunnel tun0 firewall local ipv6-name WANv6_LOCAL
+```
+
+Executing above commands will result in this addition to config file:
+
+```
+     tunnel tun0 {
+         address 2001:470:****:****::2/64
+         description "HE.net IPv6 Tunnel"
+         encapsulation sit
++        firewall {
++            in {
++                ipv6-name WANv6_IN
++            }
++            local {
++                ipv6-name WANv6_LOCAL
++            }
++        }
+         local-ip 0.0.0.0
+         multicast disable
+         remote-ip ***.**.**.**
+         ttl 255
+     }
+```
+
+Please note that as IPv6 allows for e2e connectvity from and to Internet, we'd better have WANv6_IN, before we connect other devices in the local network.
+Below results of repeated nmap scan.
+
+```
+Starting Nmap 7.01 ( https://nmap.org ) at 2022-06-26 12:01 PDT
+Note: Host seems down. If it is really up, but blocking our ping probes, try -Pn
+Nmap done: 1 IP address (0 hosts up) scanned in 3.07 seconds
+```
+
+or, when forced:
+
+```
+Starting Nmap 7.01 ( https://nmap.org ) at 2022-06-26 12:02 PDT
+Nmap scan report for tunnel******-pt.tunnel.******.****.ipv6.he.net (2001:470:*:**::2)
+Host is up (0.13s latency).
+Not shown: 994 filtered ports
+PORT     STATE  SERVICE
+6666/tcp closed irc
+6667/tcp closed irc
+6668/tcp closed irc
+6669/tcp closed irc
+7000/tcp closed afs3-fileserver
+9999/tcp closed abyss
+
+Nmap done: 1 IP address (1 host up) scanned in 41.30 seconds
+```
+
