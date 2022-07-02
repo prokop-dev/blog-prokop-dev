@@ -386,6 +386,24 @@ set interfaces ethernet eth1 ipv6 router-advert prefix 2001:470:****:****::/64
 commit
 ```
 
+### Enabling ICMP version 6 for LAN
+
+Using the [IPv6 test](https://ipv6-test.com/) or similar will quickly reveal broken IPv6 stack, as default rules in WANv6_IN are missing ICMP rule.
+You are likely to get the following recommendation.
+
+> 1. Reconfigure your firewall
+> Your router or firewall is filtering ICMPv6 messages sent to your computer.
+> An IPv6 host that cannot receive ICMP messages may encounter problems like some web pages loading partially or not at all.
+
+The remedy is to add relevant rule to WANv6_IN:
+
+```bash
+set firewall ipv6-name WANv6_IN rule 30 action accept
+set firewall ipv6-name WANv6_IN rule 30 description "Allow ICMPv6"
+set firewall ipv6-name WANv6_IN rule 30 log disable
+set firewall ipv6-name WANv6_IN rule 30 protocol icmpv6
+```
+
 ## Poor performance
 
 Unfortunatelly there is no hardware offloading for SIT tunnels. It means performance will be restricted to something like less than 100Mbit/s.
