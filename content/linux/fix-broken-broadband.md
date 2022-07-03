@@ -422,3 +422,31 @@ The IPv6 test was maxing router CPU at 100%.
  18 10.0G   18 1919M    0     0  9703k      0  0:18:00  0:03:22  0:14:38 9805k
 ```
 
+# Closing thoughts
+
+Let me share some end state of the router as well as plan for further work
+
+## Configuration dumps
+
+Here are router interfaces:
+
+```
+$ show interfaces
+Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down
+Interface    IP Address                        S/L  Description
+---------    ----------                        ---  -----------
+eth0         -                                 u/u  Openreach ONT
+eth1         10.111.1.1/24                     u/u  Local Network
+eth2         10.111.2.1/24                     u/D  Guest Network
+lo           127.0.0.1/8                       u/u
+             ::1/128
+pppoe0       212.***.**.**5                    u/u  Vodafone Broadband
+tun0         2001:470:****:**::2/64            u/u  HE.net IPv6 Tunnel
+```
+
+## Future work
+
+This is what I plan to work on:
+
+- Get Hurricane Electric / Tunnel Broker IPv6 Certification at highest (Sage) level.
+- 
