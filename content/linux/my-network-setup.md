@@ -3,12 +3,12 @@ title: "My Network Setup"
 date: 2022-07-02T20:11:02+01:00
 draft: false
 author: "Bart Prokop"
-description: "How I overenginiered my home network"
+description: "How I over-engineered my home network"
 tags: ["EdgeRouter", "Internet", "IPv6"]
 ShowToc: false
 ---
 
-In this blog entry, I will cover how badly I overenginiered home network.
+In this blog entry, I will cover how badly I over-engineered home network.
 
 # Site VLANs
 
@@ -17,12 +17,12 @@ VLANs are always implemented on edge router and switches.
 
 | VLAN | Description     | Interface | Remarks and use-case |
 |------|-----------------|-----------|----------------------|
-|    1 | Default LAN     | eth1      | This is alwas untagged on all Ethernet LAN ports |
+|    1 | Default LAN     | eth1      | This is always untagged on all Ethernet LAN ports |
 |    2 | Vendor Reserved |           | My Netgear Switch reserves those |
 |    3 | Vendor Reserved |           | My Netgear Switch reserves those |
 |    4 | IPv4 Only (DMZ) | eth1.4    | All internet exposed servers are here |
 |    5 | Guest Network   | eth1.5    | The Guest Network with FW Isolation |
-|    6 | IPv6 Only       | eth1.6    | Globally Routable IPv6 only network |
+|    6 | IPv6 Only       | eth1.6    | Globally routable IPv6 only network |
 |    7 | Unassigned      |           | Future Use |
 |    8 | Unassigned      |           | Future Use |
 |    9 | ISP Circuit     | WAN       | ONT connected via switch |
@@ -35,7 +35,7 @@ VLANs are always implemented on edge router and switches.
 
 The above VLANs are configured on EdgeRouter as well as on all the switches.
 Below are actual names used in my networks across VLANs.
-I try always stick to those when cofiguring routers and switches.
+I try always stick to those when configuring routers and switches.
 
 ```bash
 set interfaces ethernet eth1 vif 4 description "IPv4 DMZ"
@@ -53,9 +53,9 @@ set system offload ipv6 vlan enable
 
 # Networks
 
-I'm trying to aling network numbering with VLANs.
+I'm trying to align network numbering with VLANs.
 For IPv4 network, I match last 4 bits of network number with VLAN number.
-For IPv6 network, I match network numebr with VLAN number.
+For IPv6 network, I match network number with VLAN number.
 For example:
 
 | Site   | VLAN | IPv4 Network    | IPv6 Network         |
@@ -67,9 +67,9 @@ For example:
 | London |    5 | 192.168.21.0/24 | 2001:db8:0:1605::/64 |
 | London |    6 |                 | 2001:db8:0:1606::/64 |
 
-While analizing the above table, note that I might have up to 16 networks per site.
+While analyzing the above table, note that I might have up to 16 networks per site.
 I think it is quite a number for a personal use, even for "power user".
-It helps a lot with routing, as it is very easy to use network subclassing.
+It helps a lot with routing, as it is very easy to use network sub-classing.
 
 ## Guest Network
 
@@ -88,16 +88,16 @@ set service dhcp-server shared-network-name GUEST subnet 192.168.21.0/24 dns-ser
 set service dhcp-server shared-network-name GUEST subnet 192.168.21.0/24 lease 3600
 ```
 
-This network is also always broadcested on WiFi Accesspoints as `SiteGuest`.
+This network is also always broadcasted on WiFi Access Points as `SiteGuest`.
 
 ## IPv6 Only
 
 This VLAN offers only globally routable IPv6 addresses.
 There are multiple reasons why I have dedicated VLAN for IPv6 network:
 
-- Curiosity about pure IPv6 milleage
+- Curiosity about pure IPv6 mileage
 - It makes easier to configure servers with IPv4, IPv6 or both, if you can just connect server to one, other or both VLANs.
-- Solves the problem of prefix prefference. For example I use ULA (less preffered to IPv4 on basic LAN) and will connect host to IPv6 only VLAN if I really want it to have routable global IPv6. Note that ULAs are also providing IPv6 connectivity on basic LAN.
+- Solves the problem of prefix preference. For example I use ULA (less preferred to IPv4 on basic LAN) and will connect host to IPv6 only VLAN if I really want it to have routable global IPv6. Note that ULAs are also providing IPv6 connectivity on basic LAN.
 
 The following configuration will 
 
@@ -107,7 +107,3 @@ set interfaces ethernet eth1 vif 6 ipv6 router-advert prefix 2001:470:****:**::/
 set interfaces ethernet eth1 vif 6 ipv6 router-advert name-server 2001:4860:4860::8888
 set interfaces ethernet eth1 vif 6 ipv6 router-advert name-server 2001:4860:4860::8844
 ```
-
-
-
-

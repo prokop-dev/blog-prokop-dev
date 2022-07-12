@@ -19,17 +19,17 @@ So it is mid-2022 and my broadband is:
 
 Time to fix as many things as can be fixed.
 
-## Prereqs
+## Prerequisites
 
 There are two:
 
-1. Call ISP and get your PPPoE username and password. Quite oftern you need make few calls/online chats.
-2. Bin the provided "router" and connect something decent to ONT. I will use EdgeRouter.
+1. Call ISP and get your PPPoE username and password. Quite often you need make few calls/online chats.
+2. Bin the provided "router" and connect something decent to ONT. I will use [Ubiquiti EdgeRouter](https://eu.store.ui.com/collections/operator-edgemax-routers).
 
 ## End goal
 
-Get as much as possible out of bad "consumer grade" service by leveraging Ubiquiti EdgeRouter.
-Target state:
+Get as much as possible out of bad "consumer grade" service by leveraging Prosumer Router.
+Target will look like this:
 
 TBD_PICTURE
 
@@ -47,7 +47,7 @@ Change eth0 MTU to 1508 and pppoe0 to 1500. Then test if Internet still works.
 
 This can be tested from Windows Command Prompt:
 
-```
+```cmd
 # 1472(payload) + 8(ICMP) + 20(IP) = 1500 MTU
 
 C:\Users\bart>ping www.yahoo.com -f -l 1472
@@ -64,11 +64,12 @@ Approximate round trip times in milli-seconds:
     Minimum = 25ms, Maximum = 27ms, Average = 25ms
 ```
 
-## Give description to pppe0 interface
+## Give meaningful description to interfaces
 
 This will make EdgeOS Dashboard a little more readable.
 
 ```bash
+set interfaces ethernet eth0 description "OpenReach ONT"
 set interfaces ethernet eth0 pppoe 0 description "Vodafone Broadband"
 ```
 
@@ -132,7 +133,7 @@ Maximum useful data in each packet = 1460, which equals MSS.
 
 # Dynamic DNS with Google Domains
 
-I use Google Domains and it seems that EdgeOS bundles version of ddclient that supports googledomains protocol:
+I use Google Domains and it seems that EdgeOS bundles version of `ddclient` that supports `googledomains` protocol:
 
 ```
 /usr/sbin/ddclient --version
@@ -176,7 +177,7 @@ First request [new tunnel here](https://tunnelbroker.net/new_tunnel.php).
 
 ## Automate local IPv4 endpoint updates
 
-As we use dynamic IP, it is important to keep our end up-to-date. We need to set-up another ddclient instance.
+As we use dynamic IP, it is important to keep our end up-to-date. We need to set-up another `ddclient` instance.
 The example `TUNNELID` and an `UPDATEKEY` can be found in the Advanced tab of the Tunnel Details page.
 
 ```bash
@@ -287,7 +288,7 @@ Nmap done: 1 IP address (1 host up) scanned in 9.38 seconds
 
 This flags the lack of firewall on `tun0` interface.
 The Wizard, we have run initially has created WANv6_IN and WANv6_LOCAL firewall rules.
-Those rules have been applied to pppoe0 interface (along the corresponsinf IPv4 rules).
+Those rules have been applied to pppoe0 interface (along the corresponding IPv4 rules).
 
 ```
         pppoe 0 {
@@ -340,7 +341,7 @@ Executing above commands will result in below addition to `/config/config.boot` 
 ```
 
 Please note that as IPv6 allows for e2e connectvity from and to Internet, we'd better have WANv6_IN, before we connect other devices in the local network.
-Below results of repeated nmap scan.
+Below results of repeated `nmap` scan.
 
 ```
 Starting Nmap 7.01 ( https://nmap.org ) at 2022-06-26 12:01 PDT
@@ -366,7 +367,7 @@ PORT     STATE  SERVICE
 Nmap done: 1 IP address (1 host up) scanned in 41.30 seconds
 ```
 
-It still makes a sense to check if WAN interface is pingable, using some [external ping6 test](https://tools.keycdn.com/ipv6-ping).
+It still makes a sense to check if WAN interface is ping-able, using some [external ping6 test](https://tools.keycdn.com/ipv6-ping).
 
 ## Gift of IPv6 to local networks
 
@@ -446,7 +447,9 @@ tun0         2001:470:****:**::2/64            u/u  HE.net IPv6 Tunnel
 
 ## Future work
 
-This is what I plan to work on:
+This is what I plan to work in future:
 
 - Get Hurricane Electric / Tunnel Broker IPv6 Certification at highest (Sage) level.
-- 
+- Get multiple VLANs to facilitate "Home Lab".
+- Implement full site2site connectivity and routing using IPv4 and IPv6.
+- Get connectivity to Cloud SDN.
