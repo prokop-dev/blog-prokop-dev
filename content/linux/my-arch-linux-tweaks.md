@@ -44,3 +44,23 @@ And, I finally install Oh My Zsh.
 ```zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
+
+# Synchronize time on startup
+
+Server was down when I was on holidays and CMOS battery is dead. It is 14th August today...
+
+```
+# date
+Thu  2 Jun 19:44:00 BST 2022
+
+# timedatectl set-ntp true
+
+# timedatectl
+               Local time: Sun 2022-08-14 14:04:18 BST
+           Universal time: Sun 2022-08-14 13:04:18 UTC
+                 RTC time: Sun 2022-08-14 13:04:18
+                Time zone: GB (BST, +0100)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+```
