@@ -23,7 +23,20 @@ The above uses 512 bits for seed and then convert it to a pass phrase. Source co
 
 # Passphrase to GPG Key
 
+## Getting key generator
+
 I'm using [Chris Wellons's](https://nullprogram.com/blog/2019/07/10/) excellent [passphrase2pgp](https://github.com/skeeto/passphrase2pgp).
+I have installed it just by using ```go``` command:
+
+```zsh
+➜  ~ go install nullprogram.com/x/passphrase2pgp@latest
+go: downloading nullprogram.com/x/passphrase2pgp v1.2.0
+go: downloading golang.org/x/crypto v0.0.0-20200423211502-4bdfaf469ed5
+go: downloading nullprogram.com/x/optparse v1.0.0
+go: downloading golang.org/x/sys v0.0.0-20190412213103-97732733099d```
+```
+
+## Key generation
 
 Let's assume that our organization was founded on 1st December 2020 and you want to create key-pair for privacy@sample.org.
 The epoch time for you will be: 1606780800. The following command will generate you a PGP key from passphrase:
