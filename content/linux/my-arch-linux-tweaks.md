@@ -55,7 +55,7 @@ Thu  2 Jun 19:44:00 BST 2022
 
 # timedatectl set-ntp true
 
-# timedatectl
+# timedatectl status
                Local time: Sun 2022-08-14 14:04:18 BST
            Universal time: Sun 2022-08-14 13:04:18 UTC
                  RTC time: Sun 2022-08-14 13:04:18
@@ -63,4 +63,26 @@ Thu  2 Jun 19:44:00 BST 2022
 System clock synchronized: yes
               NTP service: active
           RTC in local TZ: no
+```
+
+# Fix GPG package signature errors
+
+When not upgrading system for long time you can see errors like:
+
+```
+...
+error: libcap: signature from "David Runge <dvzrv@archlinux.org>" is marginal trust
+:: File /var/cache/pacman/pkg/libcap-2.65-1-x86_64.pkg.tar.zst is corrupted (invalid or corrupted package (PGP signature)).
+Do you want to delete it? [Y/n]
+error: libtiff: signature from "David Runge <dvzrv@archlinux.org>" is marginal trust
+:: File /var/cache/pacman/pkg/libtiff-4.4.0-3-x86_64.pkg.tar.zst is corrupted (invalid or corrupted package (PGP signature)).
+Do you want to delete it? [Y/n]
+error: failed to commit transaction (invalid or corrupted package)
+Errors occurred, no packages were upgraded.
+```
+
+Fit it simply with this:
+
+```
+# pacman -Sy archlinux-keyring
 ```
