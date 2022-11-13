@@ -7,7 +7,28 @@ description: "Description how easiest way to install Arch Linux on Kimsufi KS1 a
 tags: ["Linux", "OVH", "hosting", "Cloud"]
 ---
 
+# Install Arch Linux on Kimsufi Ovh Eco
+
+*Prerequisites*: Dedicated server from Kimsufi (any OVH dedicated server should be fine).
+You also must have public SSH key to SSH to the server after installation is completed.
+[https://docs.ovh.com/gb/en/dedicated/bringyourownimage Offical instructions]. 
 Install "Cloud Ready" images are available here: https://geo.mirror.pkgbuild.com/images/latest/
+
+
+1. Navigate to [https://www.ovh.com/manager/#/dedicated/server Dedicated Servers] section in your OVH management panel, then select server you want to deploy Arch Linux to.
+2. Click ... next to "Last operating system (OS) installed by OVHcloud" and choose install
+3. Select "Install from custom image"
+4. For "Image URL" put https://geo.mirror.pkgbuild.com/images/latest/Arch-Linux-x86_64-cloudimg.qcow2
+5. For "Image type" select qcow2
+6. For "Checksum type" select sha256
+7. For "Image checksum" put fingerprint value from https://geo.mirror.pkgbuild.com/images/latest/Arch-Linux-x86_64-cloudimg.qcow2.SHA256
+8. Enable "ConfigDrive" to enter "Server host name" and your public "SSH key" (both are mandatory for Arch Cloud Init install)
+9. Click "Install the system"
+10. Wait (it takes a while) for email from OVH titled "Installation of your image", it will say "Congratulations! Your dedicated server has just been installed! Connect to your server with ssh key provided during your installation."
+11. Use `ssh arch@IP_ADDRESS` of our dedicated box to log-in.
+12. You've completed arch installation on our box. Harden the server and customise it to your own liking.
+
+The above were submitted to [https://wiki.archlinux.org/title/Arch_Linux_on_a_VPS](Arch Wiki).
 
 ## Post install
 
