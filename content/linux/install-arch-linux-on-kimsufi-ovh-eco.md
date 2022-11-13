@@ -9,6 +9,22 @@ tags: ["Linux", "OVH", "hosting", "Cloud"]
 
 Install "Cloud Ready" images are available here: https://geo.mirror.pkgbuild.com/images/latest/
 
+## Post install
+
+Update local server fingerprint... If you seeing the below when trying to connect:
+
+```
+$ ssh arch@SERVER_IP
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+```
+
+Use the following to remove old server instance SSH key pinning:
+
+```
+ssh-keygen -f ~/.ssh/known_hosts -R "SERVER_IP"
+```
 
 ## Security
 
@@ -217,3 +233,16 @@ sudo pacman -S zsh
 cat /etc/shells
 ```
 
+Add new local user
+
+```bash
+sudo useradd -m -s /usr/bin/zsh bart
+sudo pacman -S git # required for OMZ installation
+sudo su - bart
+```
+
+```zsh
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+rm .zshrc.pre-oh-my-zsh
+cp .zshrc .zshrc.backup-2022-11-13
+```
