@@ -11,9 +11,8 @@ tags: ["Linux", "OVH", "hosting", "Cloud"]
 
 *Prerequisites*: Dedicated server from Kimsufi (any OVH dedicated server should be fine).
 You also must have public SSH key to SSH to the server after installation is completed.
-[https://docs.ovh.com/gb/en/dedicated/bringyourownimage Offical instructions]. 
+[Offical instructions](https://docs.ovh.com/gb/en/dedicated/bringyourownimage). 
 Install "Cloud Ready" images are available here: https://geo.mirror.pkgbuild.com/images/latest/
-
 
 1. Navigate to [https://www.ovh.com/manager/#/dedicated/server Dedicated Servers] section in your OVH management panel, then select server you want to deploy Arch Linux to.
 2. Click ... next to "Last operating system (OS) installed by OVHcloud" and choose install
@@ -28,11 +27,11 @@ Install "Cloud Ready" images are available here: https://geo.mirror.pkgbuild.com
 11. Use `ssh arch@IP_ADDRESS` of our dedicated box to log-in.
 12. You've completed arch installation on our box. Harden the server and customise it to your own liking.
 
-The above were submitted to [https://wiki.archlinux.org/title/Arch_Linux_on_a_VPS](Arch Wiki).
+The above were submitted to [Arch Wiki](https://wiki.archlinux.org/title/Arch_Linux_on_a_VPS).
 
 ## Post install
 
-Update local server fingerprint... If you seeing the below when trying to connect:
+Update local server fingerprint (if you previously SSHed to that IP and you are seeing the below when trying to connect):
 
 ```
 $ ssh arch@SERVER_IP
@@ -262,8 +261,12 @@ sudo pacman -S git # required for OMZ installation
 sudo su - bart
 ```
 
+Perform basic initialisation as new local user
+
 ```zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 rm .zshrc.pre-oh-my-zsh
 cp .zshrc .zshrc.backup-2022-11-13
+ssh-keygen -t ed25519
+
 ```
