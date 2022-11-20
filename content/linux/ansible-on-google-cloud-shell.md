@@ -3,16 +3,17 @@ title: "Ansible on Google Cloud Shell"
 date: 2022-11-13T09:17:55Z
 draft: false
 author: "Bart Prokop"
-description: "Starting new, starting fresh"
+description: "How to use Ansible with Google Cloud Shell"
 tags: ["Ansible", "Google Cloud Shell"]
+ShowToc: false
 ---
-
-# Ansible on Google Cloud Shell
 
 The [Google Cloud Shell](https://shell.cloud.google.com/?show=terminal) is fantastic power tool. Unfortunately for me it comes without [Ansible](https://github.com/ansible/ansible) preinstalled.
 
 Google Cloud Shell is basically Debian, so Ansible can be easily added using `apt-get` command.
 However it has drawback of any changes to underlying VM being wiped-up frequently as underlying machine is ephemeral one.
+
+# Installation
 
 There is a better way, though. Use `pip`.
 
@@ -71,11 +72,15 @@ Requires: ansible-core
 Required-by:
 ```
 
+# Maintenance
+
 Remember to upgrade Ansible from time to time :
 
 ```bash
 python3 -m pip install --upgrade --user ansible
 ```
+
+# Usage
 
 Try if Ansible works with some remote host:
 

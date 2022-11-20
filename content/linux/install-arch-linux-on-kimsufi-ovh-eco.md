@@ -7,12 +7,10 @@ description: "Description how easiest way to install Arch Linux on Kimsufi KS1 a
 tags: ["Linux", "OVH", "hosting", "Cloud"]
 ---
 
-# Install Arch Linux on Kimsufi Ovh Eco
-
 In this post, I will cover my learnings from installing Arch Linux on OVH dedicated server.
 I've also shared what I learnt on [Arch Linux on a VPS](https://wiki.archlinux.org/title/Arch_Linux_on_a_VPS).
 
-## Installation procedure
+# Installation procedure
 
 *Prerequisites*: Obviously a dedicated server from Kimsufi (any OVH dedicated server should be fine).
 You also must have public SSH key to SSH to the server after installation is completed.
@@ -34,11 +32,11 @@ Steps below covers installation of "Cloud Ready" images, that are [available her
 
 [Offical instructions](https://docs.ovh.com/gb/en/dedicated/bringyourownimage).
 
-## Post install
+# Post install
 
 Just few post install sanity tasks
 
-### Update SSH fingerprint on your jump box
+## Update SSH fingerprint on your jump box
 
 Update local server fingerprint (if you previously SSHed to that IP and you are seeing the below when trying to connect):
 
@@ -55,7 +53,7 @@ Use the following to remove old server instance SSH key pinning:
 ssh-keygen -f ~/.ssh/known_hosts -R "SERVER_IP"
 ```
 
-### fix hosts file
+## fix hosts file
 
 The `/etc/hosts` file from Cloud Ready Arch Linux template is pretty sparse (I've used `paris` for hostname specified in "ConfigDrive").
 
@@ -80,9 +78,9 @@ ff02::2         ip6-allrouters
 127.0.1.1       paris.prokop.dev paris
 ```
 
-## Basic Security hardening
+# Basic Security hardening
 
-### CPU
+## CPU
 
 Check your server for CPU vulnerabilities:
 
@@ -99,13 +97,20 @@ Check your server for CPU vulnerabilities:
 /sys/devices/system/cpu/vulnerabilities/retbleed:Not affected
 /sys/devices/system/cpu/vulnerabilities/srbds:Not affected
 /sys/devices/system/cpu/vulnerabilities/meltdown:Not affected
+
+[arch@paris ~]$ journalctl -k --grep=microcode
+Nov 20 09:23:09 paris kernel: microcode: sig=0x30661, pf=0x8, revision=0x10d
+Nov 20 09:23:09 paris kernel: microcode: Microcode Update Driver: v2.2.
 ```
 
 Do not forget to install micro-code updates:
 
 ```
 sudo pacman -S intel-ucode
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+## Network
 
 Server listens on the following ports:
 
@@ -125,7 +130,9 @@ tcp         LISTEN        0             128                              [::]:22
 tcp         LISTEN        0             4096                             [::]:5355                       [::]:*           users:(("systemd-resolve",pid=315,fd=14))
 ```
 
-Packages installed by default:
+### SSHd
+
+Ensure 
 
 # Tailoring your install
 
@@ -170,4 +177,3 @@ ssh-keygen -t ed25519
 cat .ssh/id_ed25519.pub
 curl https://raw.githubusercontent.com/bartprokop/ssh-keys/main/bart-gcs.pub >> ~/.ssh/authorized_keys
 ```
-

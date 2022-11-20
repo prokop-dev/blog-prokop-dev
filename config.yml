@@ -14,7 +14,7 @@ googleAnalytics: G-NM6BTD6CYS
 
 minify:
     disableXML: true
-    # minifyOutput: true
+    minifyOutput: true
 
 languages:
     en:
@@ -39,11 +39,10 @@ languages:
                   url: categories/
                   weight: 10
 
-    fr:
-        languageName: ":fr:"
-        languageAltTitle: French
+    pl:
+        languageName: "Polski"
         weight: 2
-        title: PaperModL2
+        title: "Moje notatki"
         taxonomies:
           category: FRcategories
           tag: FRtags
@@ -82,23 +81,6 @@ languages:
                 - name: NullLink3
                   url: "#"
 
-    fa:
-        languagedirection: rtl
-        weight: 3
-        title: PaperMod RTL
-        homeInfoParams:
-            Title: "Hi there \U0001F44B"
-            Content: Welcome to RTL layout
-        taxonomies:
-          category: FAcategories
-          tag: FAtags
-          series: FAseries
-        menu:
-            main:
-                - name: FATags
-                  url: fatags
-                  weight: 10
-
 outputs:
     home:
         - HTML
@@ -111,8 +93,8 @@ params:
     - posts
     - linux
     env: production
-    description: "Theme PaperMod - https://github.com/adityatelange/hugo-PaperMod"
-    author: Theme PaperMod
+    description: "Bart Prokop Blog - https://github.com/adityatelange/hugo-PaperMod"
+    author: "Bart Prokop"
     # author: ["Me", "You"] # multiple authors
 
     defaultTheme: auto
