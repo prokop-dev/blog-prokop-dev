@@ -78,6 +78,28 @@ ff02::2         ip6-allrouters
 127.0.1.1       paris.prokop.dev paris
 ```
 
+## Update your DNS
+
+Add A and AAAA records to your DNS zone. Use OVH panel or `ip a` command to extract IP addresses:
+
+```
+$ ip a
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    inet 1.2.3.4/24 metric 100 brd 1.2.3.255 scope global dynamic eth0
+    inet6 2001:1234:5:678::4321/128 scope global
+```
+
+Test that both IPv4 and IPv6 resolves correctly:
+
+```
+prokop_bart@cloudshell:~$ curl paris.prokop.dev -v
+*   Trying 1.2.3.4:80...
+* connect to 1.2.3.4 port 80 failed: Connection refused
+*   Trying 2001:1234:5:678::4321:80...
+```
+
+Then use OVH panel to create *reverse DNS record* aka `PTR` record.
+
 # Basic Security hardening
 
 ## CPU
@@ -132,7 +154,12 @@ tcp         LISTEN        0             4096                             [::]:53
 
 ### SSHd
 
-Ensure 
+Ensure that you force public key authentication by having those in `/etc/ssh/sshd_config`:
+
+```
+PasswordAuthentication no
+AuthenticationMethods publickey
+```
 
 # Tailoring your install
 

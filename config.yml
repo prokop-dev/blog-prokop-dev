@@ -13,8 +13,8 @@ pygmentsUseClasses: true
 googleAnalytics: G-NM6BTD6CYS
 
 minify:
-    disableXML: true
-    minifyOutput: true
+  disableXML: true
+  minifyOutput: true
 
 languages:
     en:
@@ -82,10 +82,10 @@ languages:
                   url: "#"
 
 outputs:
-    home:
-        - HTML
-        - RSS
-        - JSON
+  home:
+  - HTML
+  - RSS
+  - JSON
 
 params:
     mainSections:
@@ -191,25 +191,21 @@ markup:
 #         style: monokai
 
 privacy:
-    vimeo:
-        disabled: false
-        simple: true
-
-    twitter:
-        disabled: false
-        enableDNT: true
-        simple: true
-
-    instagram:
-        disabled: false
-        simple: true
-
-    youtube:
-        disabled: false
-        privacyEnhanced: true
-
+  vimeo:
+    disabled: false
+    simple: true
+  twitter:
+    disabled: false
+    enableDNT: true
+    simple: true
+  instagram:
+    disabled: false
+    simple: true
+  youtube:
+    disabled: false
+    privacyEnhanced: true
 services:
-    instagram:
-        disableInlineCSS: true
-    twitter:
-        disableInlineCSS: true
+  instagram:
+    disableInlineCSS: true
+  twitter:
+    disableInlineCSS: true
