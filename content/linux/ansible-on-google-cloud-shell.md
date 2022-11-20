@@ -9,12 +9,12 @@ tags: ["Ansible", "Google Cloud Shell"]
 
 # Ansible on Google Cloud Shell
 
-The [Google Cloud Shell](https://shell.cloud.google.com/?show=terminal) is fantastic power tool. Unfortunately for me it comes without [Ansible](https://github.com/ansible/ansible).
+The [Google Cloud Shell](https://shell.cloud.google.com/?show=terminal) is fantastic power tool. Unfortunately for me it comes without [Ansible](https://github.com/ansible/ansible) preinstalled.
 
 Google Cloud Shell is basically Debian, so Ansible can be easily added using `apt-get` command.
-However it has drawback of any changes being wiped-up frequently as underlying machine is ephemeral one.
+However it has drawback of any changes to underlying VM being wiped-up frequently as underlying machine is ephemeral one.
 
-There is a better one, using `pip`.
+There is a better way, though. Use `pip`.
 
 ```bash
 python3 -m pip install --user ansible
@@ -41,7 +41,6 @@ Installing collected packages: resolvelib, ansible-core, ansible
 ```
 
 Please note the warning above. Actually GCS home account contains `.profile` script that would add to `PATH` variable `~/bin` and `~/.local/bin` folders if those are present.
-
 Close and open again Google Cloud Shell and ansible should be permanently available:
 
 ```
@@ -72,7 +71,7 @@ Requires: ansible-core
 Required-by:
 ```
 
-Remember from time to time to upgrade Ansible:
+Remember to upgrade Ansible from time to time :
 
 ```bash
 python3 -m pip install --upgrade --user ansible
