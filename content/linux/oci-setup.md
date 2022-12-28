@@ -43,8 +43,53 @@ git config --global user.signingkey XXXXXXX # use key grip: gpg --list-secret-ke
 We decided that tenancy for each family member will be created in different region and have unique IP subnet, so we will try to have some cross-site VPN fun.
 We use specific IP ranges, described here.
 
-Start with configuring "Virtual Cloud Networking".
-We will not use wizard, rather we will control every step manually.
-Click "Create VCN" and set the following values:
+Start with configuring "Virtual Cloud Networks" (under "Networking" section).
+We will use wizard, as normal setup is too convoluted (e.g. CIDR ranges needs to be defined via options busied in control panel).
+Click "Start VCN Wizard" and chose "Create VCN with Internet Connectivity".
+Then set the following values:
 
-- Name: `paris`, e.g. I used part of region name from 
+- VCN Name: `paris`, e.g. I used part of region name from region, eg. `uk-paris-1`.
+- Compartment: use root compartment
+- VCN CIDR Block: I highly recommend to use something smaller than `10.0/16`. I went for Private C range `192.168.123.0/24`.
+- Public Subnet CIDR Block: For "always free" tenancy, 30 usable IP addresses should be OK, so go with subclass: `192.168.123.0/27`.
+- Private Subnet CIDR Block: Also assign space of 32 IP addresses for not reachable from Internet hosts: `192.168.123.32/27`.
+
+Click review / create and enjoy your VCN created. We will use it later to connect server instances to it.
+Explore if the following were created for you:
+
+- Two subnets
+- Two routing tables
+- One internet gateway
+- Two security lists
+- One DHCP option
+
+# Setup Vault
+
+This will allow to use full disc encryption for VMs.
+Navigate to "Vault" under "Security" section.
+
+# Create Virtual Servers
+
+Oracle CLoud does not offer Arch Linux.
+The procedure to install Arch on Oracle free tier is a bit of convoluted, although there are some gists.
+The most "pure" and "not-enterpisey" OS available is Ubuntu.
+As Debian derivative, it is closest to what I like work with.
+
+The generous Oracle offering will let to create:
+
+- Two x86 64bit 1MB Ram instances.
+- 
+
+## Setting up the AMD
+
+Go to "Instances" under "Compute" section.
+Click "Create instance" (obviously). The provide:
+
+- Name: I use to name VPSes after location, so `paris1`, `paris2`, etc works for me.
+- Create in compartment: Use root
+- Placement: If you see `Always Free-eligible`, do not touch it.
+- Image and shape: Click "Edit", then "Change image" and choose latest Ubuntu available. It is advisable also to select "Minimal" version. Confirm with "Select image" button.
+- Networking: Click "Edit" and select VCN created previously. Chose existing public or private subnet, according to your liking.
+- Add SSH keys: Use "Paste public keys" and paste SSH public key created previously (the one for Cloud Shell)
+-  
+
