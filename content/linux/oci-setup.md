@@ -67,6 +67,34 @@ Explore if the following were created for you:
 
 This will allow to use full disc encryption for VMs.
 Navigate to "Vault" under "Security" section.
+Then click "Create Vault". Use following options:
+
+- Create in Compartment: use your root compartment.
+- Name: put something that will allow you identify Vault later.
+- Make it a virtual private vault: leave it unchecked (unless you really want make "vault backups").
+
+The reason why I do not want to have option to "backup Vault" is that it should force me to design all my cloud deployment that way that I can forfeit all data - I should have proper independent Backup and DR procedure to rebuild everything from scratch. It is in the end "someone's else computer" as Larry once said.
+
+After Vault is created, click on it, go to "Master Encryption Keys" and click "Crete Key" button:
+
+- Create in Compartment: root
+- Protection Mode: HSM
+- Name: `vaultname-fde`, I use vault name, hyphen and broad function, here Full Disk Encryption.
+- Key Shape: Algorithm: use AES
+- Key Shape: Length: use 256
+- Import External key: should be unchecked. We want to trust that HSM will create cryptographically strong random key.
+
+Click "Create Key". Copy master key OCID, as you will need it later to grant `blockstorage` service access to this key. 
+
+Now you need to allow new key to be used by block storage, so new policy to control Vault access needs to be added.
+
+Go to "Identity" then "Policies".
+Click "Create Policy". Use:
+
+- Name: vaultname-policy
+- Description: Access policy to vaultname Vault
+- Compartment: root
+- In "Policy Builder" click Show manual editor and enter `Allow service blockstorage to use keys in tenancy where target.key.id = '<key_OCID>'`
 
 # Create Virtual Servers
 
@@ -77,8 +105,8 @@ As Debian derivative, it is closest to what I like work with.
 
 The generous Oracle offering will let to create:
 
-- Two x86 64bit 1MB Ram instances.
-- 
+- Two AMD 64bit 1GB Ram instances.
+- One ARM 4core 24GB RAM instance.
 
 ## Setting up the AMD
 
@@ -89,7 +117,38 @@ Click "Create instance" (obviously). The provide:
 - Create in compartment: Use root
 - Placement: If you see `Always Free-eligible`, do not touch it.
 - Image and shape: Click "Edit", then "Change image" and choose latest Ubuntu available. It is advisable also to select "Minimal" version. Confirm with "Select image" button.
-- Networking: Click "Edit" and select VCN created previously. Chose existing public or private subnet, according to your liking.
+- Networking: Click "Edit" and select VCN created previously. Chose existing public or private subnet, according to your liking. If using public range, ensure "Assign a public IPv4 address" is selected.
 - Add SSH keys: Use "Paste public keys" and paste SSH public key created previously (the one for Cloud Shell)
--  
+-  Under "Boot volume", ensure that both "Use in-transit encryption" and "Encrypt this volume with a key that you manage" are checked. Use master FDE key, you created previously.
 
+Click "Create" and wait.
+
+Repeat this procedure to create second "always free" VPS.
+
+## Meaty 4xCPU 24GB RAM 100GB SSD
+
+As we used 50% of 200GB block storage for AMD VMs (i.e. minimum volume size per VM is 50GB), we really have two possibilities for our remaining free tier:
+
+- 1x biggest ARM machine: 4xCPU 24GB RAM 100GB SSD
+- 2x medium ARM machines: 2xCPU 12GB RAM 50GB SSD
+
+Despite there is [https://arnoldgalovics.com/free-kubernetes-oracle-cloud/](Kubernetes way of running 4 ARM instances on OCI) for free, I decided for one biggest possible machine for my setup.
+I would probably not have enough workloads for it now, but it is definitely something I will explore in future.
+
+Here are things to do differently to the above AMD recipe.
+
+- Shape: Please click "Change shape" and select `Ampere`, the expand the accordion and move CPU and RAM sliders to the far right. Confirm with "Select shape" button.
+- Image: Chose Ubuntu, latest version in `aarch64` architecture.
+- Specify a custom boot volume size: Check this and increase size from 50 GB to 100 GB.
+
+## Remaining tasks
+
+### DNS
+
+Create A records for newly created servers, e.g.
+
+```
+name1.domain.com    A   2.2.2.1
+name2.domain.com    A   2.2.2.2
+name3.domain.com    A   2.2.2.3
+```
