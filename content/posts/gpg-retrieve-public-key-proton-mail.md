@@ -3,18 +3,18 @@ title: "Retrieving PGP key from protonmail using gpg"
 date: 2022-06-15T23:08:44+01:00
 draft: false
 author: "Bart Prokop"
-description: "Two was to retrieve public PGP key from proton mail using gpg command line."
+description: "How to retrieve public PGP keys from proton mail using gpg command line."
 tags: ["personal", "blog"]
 ---
 
-It seems that Proton Mail supports access to its customers public keys using two methods:
+It seems that Proton Mail publishes its customers public keys using at leasts two methods:
 
 - WKD (Web Key Distribution)
 - Exposes hkps server (host name: api.protonmail.ch)
 
-### Using WKD
+# Using WKD
 
-Just retieve public key using the following command:
+Just retrieve public key using by issues the following command:
 
 ```bash
 $ gpg --locate-keys prokop.bart@pm.me
@@ -29,9 +29,9 @@ sub   rsa2048 2018-05-26 [E]
 
 Of course it would be good to sign the key and distribute signed one to some public key server.
 
-### Using keyserver / HKPS protocol
+# Using keyserver / HKPS protocol
 
-Just specify `api.protonmail.ch` as keyserver:
+You need to specify `api.protonmail.ch` as keyserver for `gpg` command:
 
 ``` bash
 $ gpg --keyserver hkps://api.protonmail.ch --search-key prokop.bart@proton.me
@@ -44,4 +44,4 @@ gpg: Total number processed: 1
 gpg:               imported: 1
 ```
 
-The above commands runs "interactive" search against keyserver and prompts for option that allows importing desired key.
+The above command runs an "interactive" search against keyserver and prompts for option that allows to import the desired key.
