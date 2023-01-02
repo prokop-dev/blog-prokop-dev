@@ -20,7 +20,7 @@ uid           [ unknown] user@protonmail.com <user@protonmail.com>
 sub   cv25519 2021-10-13 [E]
 ```
 
-So here is quick instruction how to setup WKD for your emails.
+So here is quick instruction how to setup WKD for any email (i.e. not hosted by Proton Mail).
 
 First you need to create empty file relative to your webserver ROOT.
 
