@@ -8,7 +8,7 @@ tags: ["personal", "blog"]
 ShowToc: false
 ---
 
-This Christmas decided to gift to my significant other a Game of Thrones Blu Ray set (4k, UHD - 33 discs total) - ADD AMAZON AFFILIATE LINK ;).
+This Christmas decided to gift to my significant other a [https://www.amazon.co.uk/Game-Thrones-Seasons-Region-Blu-ray/dp/B08DGR1SHV?&_encoding=UTF8&tag=bartprokop-21&linkCode=ur2&linkId=c8c5db0145b84d9325946060f1b19365&camp=1634&creative=6738](Game Of Thrones) Blu Ray set (4k, UHD - 33 discs total).
 This post cover all what I needed to do to get it watched on living room's TV (which is LG OLED).
 The first obvious obstacle has ocurred - I do not have the Blu Ray Player (not even mentioning UHD Blue Ray).
 It is 2022/23 and physical media are slightly a thing of past.
@@ -25,3 +25,5 @@ pacman -S minidlna
 
 
 Some content
+
+Disclaimer: the link to Amazon is an affiliate link.
