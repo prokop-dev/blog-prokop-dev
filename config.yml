@@ -89,13 +89,13 @@ outputs:
 
 params:
     mainSections:
+    - diy
     - java
-    - posts
     - linux
+    - posts
     env: production
     description: "Bart Prokop Blog - https://github.com/adityatelange/hugo-PaperMod"
     author: "Bart Prokop"
-    # author: ["Me", "You"] # multiple authors
 
     defaultTheme: auto
     # disableThemeToggle: true
