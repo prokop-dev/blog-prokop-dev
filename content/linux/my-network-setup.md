@@ -23,7 +23,7 @@ VLANs are always implemented on edge router and switches.
 |    4 | IPv4 Only (DMZ) | eth1.4    | All internet exposed servers are here |
 |    5 | Guest Network   | eth1.5    | The Guest Network with FW Isolation |
 |    6 | IPv6 Only       | eth1.6    | Globally routable IPv6 only network |
-|    7 | Unassigned      |           | Future Use |
+|    7 | IoT Devices     |           | IoT devices, I prefer not to mix with trusted stuff for security reasons |
 |    8 | Unassigned      |           | Future Use |
 |    9 | ISP Circuit     | WAN       | ONT connected via switch |
 |   10 | Unassigned      |           | Future Use |
@@ -63,17 +63,17 @@ For example:
 | Berlin |    1 | 192.168.1.0/24  | 2001:db8:0:0001::/64 |
 | Berlin |    5 | 192.168.5.0/24  | 2001:db8:0:0005::/64 |
 | Berlin |    6 |                 | 2001:db8:0:0006::/64 |
+| Berlin |    7 | 192.168.7.0/24  | 2001:db8:0:0007::/64 |
 | London |    1 | 192.168.17.0/24 | 2001:db8:0:1601::/64 |
 | London |    5 | 192.168.21.0/24 | 2001:db8:0:1605::/64 |
 | London |    6 |                 | 2001:db8:0:1606::/64 |
+| London |    7 | 192.168.23.0/24 | 2001:db8:0:1607::/64 |
 
 While analyzing the above table, note that I might have up to 16 networks per site.
 I think it is quite a number for a personal use, even for "power user".
 It helps a lot with routing, as it is very easy to use network sub-classing.
 
 ## Guest Network
-
-
 
 ```bash
 set interfaces ethernet eth1 vif 5 address 192.168.21.1/24
@@ -89,6 +89,23 @@ set service dhcp-server shared-network-name GUEST subnet 192.168.21.0/24 lease 3
 ```
 
 This network is also always broadcasted on WiFi Access Points as `SiteGuest`.
+
+## IoT Devices
+
+```bash
+set interfaces ethernet eth1 vif 7 address 192.168.23.1/24
+set interfaces ethernet eth1 vif 7 description "IoT Devices"
+
+set service dhcp-server shared-network-name IOT description "IoT Devices dhcpd"
+set service dhcp-server shared-network-name IOT authoritative enable
+set service dhcp-server shared-network-name IOT subnet 192.168.23.0/24 start 192.168.23.101 stop 192.168.23.199
+set service dhcp-server shared-network-name IOT subnet 192.168.23.0/24 default-router 192.168.23.1
+set service dhcp-server shared-network-name IOT subnet 192.168.23.0/24 dns-server 1.1.1.1
+set service dhcp-server shared-network-name IOT subnet 192.168.23.0/24 dns-server 1.0.0.1
+set service dhcp-server shared-network-name IOT subnet 192.168.23.0/24 lease 86400
+```
+
+This network is also always broadcasted on WiFi Access Points as `IoT`.
 
 ## IPv6 Only
 

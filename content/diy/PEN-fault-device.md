@@ -5,7 +5,7 @@ draft: false
 author: "Bart Prokop"
 description: "How to make your own PEN fault detection device for Tesla Wall Connector"
 tags: ["DIY", "spark", "electricity"]
-ShowToc: false
+ShowToc: true
 ---
 
 # Disclaimer
@@ -18,8 +18,7 @@ In most jurisdictions you must be a *competent person* to carry electrical work.
 
 The information contained herein is not mean to be comprehensive and is for informational purposes only. You should not undertake to perform anything described herein without adequate training and/or supervision. The Author disclaims any responsibility for any injury, damage, or loss as a result of reliance upon the information found on this site/blog.
 
-Links to Amazon are affiliate links.
-
+Amazon links are affiliate links.
 
 # Tesla Wall Charger Gen 3
 
@@ -34,24 +33,39 @@ While considering the Tesla charger, I noticed someone complaining in review abo
 
 Most UK chargers now implement "PEN fault protection device" and, I suppose are better avoided because of it. I'm exploring that topic below, but shortly: I think (as reasonable, but not necessary by letter of regulation) that PEN fault device should be separate from charger and installed inside and not as part of outdoor appliance.
 
-# Deciphering regulations and reading Tesla manual
+# TN-C-S and PEN fault research
 
-TN-C-S is used for the electricity supply to the majority of UK electrical installations. Adding an EV charger creates a potential safety issue if an open PEN conductor fault occurs within the electricity distribution network. Because of this, in the UK, EV chargers that are used to operate outdoors have a legal requirement to be protected from ‘neutral faults’ when connected to a PME (protective multiple earthing) network. This ensures that the user cannot get an electric shock if the supply neutral becomes disconnected. This is done by disconnecting the live, the neutral, and the earth connections to the vehicle if a fault is detected, in accordance with IET wiring regulation 722.411.4.1.
+[TN-C-S is used for the electricity supply](https://en.wikipedia.org/wiki/Earthing_system) to the majority of UK electrical installations. Adding an EV charger creates a potential safety issue if an [open PEN conductor fault](https://electrical.theiet.org/wiring-matters/years/2021/84-march-2021/broken-pen) occurs within the electricity distribution network. Because of this, in the UK, EV chargers that are used to operate outdoors have a legal requirement to be protected from ‘neutral faults’ when connected to a PME (protective multiple earthing) network. This ensures that the user cannot get an electric shock if the supply neutral becomes disconnected. This is done by disconnecting the live, the neutral, and the earth connections to the vehicle if a fault is detected, in accordance with IET wiring regulation 722.411.4.1.
 
 ## What to protect against?
 
 Please watch this video: [TN-C-S Danger - Broken PEN Conductor (Combined Earth & Neutral)](https://youtu.be/JRHyqouJPzE).
 
-A broken PEN conductor (before installation) can be potentially fatal as your car body can get 230V potential. If you touch your car and at the same time something that has good contact with earth you will be electrocuted. Note that your RCD protection will fail. This problem is not specific to electric cars or chargers. It is specific to having conductive (e.g. metal) parts of outdoor device connected to PME network. Note that car tyres are isolating car body from earth (so electric potential cannot be neutralised).
+A broken PEN conductor (before installation) can be potentially fatal as your car body can get live potential. If you touch your car and at the same time something that has good contact with earth you will be electrocuted. Note that your existing RCD protection will not work. This problem is not specific to electric cars or EV chargers. It is specific to having conductive (e.g. metal) parts of outdoor device connected to PME network. Note that car tyres are isolating car body from earth, so electric potential cannot be neutralised.
 
 To protect against this scenario, it is necessary to either provide a dedicated earth to the EV charger or fit a PEN fault protection device that will automatically disconnect the PEN. If there is a true dedicated earth available and the earthing system is in good order, PEN fault protection may not be required. As this is usually not feasible (and in most cases neither practical nor economical), then PEN fault protection must be fitted.
 
-As PEN fault danger is primarily related to outdoor appliances, I would argue that any protection device should be housed inside your property and not be a part of the charger. That is why I actually decided not to have charger with PEN protection built in.
+As PEN fault danger is primarily related to outdoor appliances, I would argue that any protection device should be housed inside your property and not be a part of the charger. That is why I actually decided not to have charger with PEN protection built in. Quote from clause 8.4 of BS EN 61851-1:
+
+> For Modes 3 and 4, permanently connected EV supply equipment, protective earthing conductors shall not be switched.
+
+There is [BEAMA Technical Bulletin](https://www.beama.org.uk/static/794d3387-de78-49cb-9d89639c4aea5310/PROTECTIVE-EARTH-DISCONNECTION-WHEN-CARRYING-OUT-ELECTRIC-VEHICLE-CHARGING.pdf) that covers the possibility of building-in PEN fault protection device into EV charges. In my opinion, PEN fault detection is not something that charger should be doing and I steered away from chargers having "Declaration of Confrmity" stating "with the exception of clause..." and "...this clause conflicts with UK’s IET Wiring Regulations". Simply speaking, manufacturers know customers will be unhappy with yet another clunky device on the wall, so "let's put it in clunky EV charger". My point is that having "unprotected PEN conductor" outdoors (i.e. inside charger) is risk on its own. Similarly, I think the separation of duties principle supports separation of earthing function from charging into two devices. Not to mention that building own PEN fault detector is cool learning excercise for someone with my background.
+
+## What other protection is required?
+
+PEN protection fault will inevitably become a sort of "consumer unit" shape box hanging in my garage. As likely it will become powered directly from meter tails (e.g. just to prevent any cascading RCD issues), let's just check for other protection requirements.
+
+The requirements for charging of electric vehicles were the subject of amendment 1 to BS 7671 which came into effect in July 2020.
+
+### RDCB, MCB or RCBO
+
+Regulation 722.531.3 requires that an RCD (max 30mA) supplies a car charger. This RCD shall disconnect all live conductors including the neutral.
+
+### MBC
 
 # Designing my own PEN fault device
 
 The modus operandi for "PEN fault device" is simple. When fault is detected, just disconnect all the cables.
-
 
 # Parts
 
