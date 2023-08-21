@@ -31,7 +31,11 @@ I have created bucked named `assets.prokop.dev`.
 
 I have selected South Carolina as single region for my data.
 
+![Select location](https://assets.prokop.dev/qg/2023/08/20230820-03.png)
+
 Standard for storage class is most appropriate option for our use case.
+
+![Storage class](https://assets.prokop.dev/qg/2023/08/20230820-04.png)
 
 I've disabled "Enforce public access prevention on this bucket".
 Access control is uniform as we want to allow access to all files.
