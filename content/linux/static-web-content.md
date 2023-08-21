@@ -1,6 +1,6 @@
 ---
 title: "Static Web on Google Cloud"
-date: 2023-08-20T30:43:47Z
+date: 2023-08-20T20:43:47Z
 draft: false
 author: "Bart Prokop"
 description: "How to use Cloud Storage bucket to host a static website"
