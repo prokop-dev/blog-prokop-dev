@@ -15,13 +15,13 @@ This post describes how I've configured a Cloud Storage bucket to host a static 
 
 The following is everything what was required to create fully operational, CDN powered, backed by object bucket asset distribution facility.
 
-## Create a new Google Cloud Project
+## A new Google Cloud Project
 
 I headed to [Google Cloud Console](https://console.cloud.google.com) and created a new project called "Web Static Content".
 
 I had to enable billing for this, even though I expect to get all handled within Free Tier allowance.
 
-## Create Bucket
+## Cloud Storage Bucket
 
 Navigate to [Cloud Storage](https://console.cloud.google.com/storage/browser) section of Google Cloud Console.
 
@@ -53,12 +53,15 @@ As my Google account that I use for Google Cloud is managed by Google Workspace 
 Note that Cloud Storage Always Free quotas apply to usage in `US-WEST1`, `US-CENTRAL1`, and `US-EAST1` regions.
 So, to get first 5 GB per month free, just create bucket in one of above regions.
 
+## Uploading and sharing some files
+
 Finally, I've upload few files.
 
 ![Files in Bucket](https://assets.prokop.dev/qg/2023/08/20230820-01.png)
 
-Navigate to Permission tab and click "Grant Access".
-You will need to add In the New principals field, enter `allUsers`.
+Then navigate to Permission tab and click "Grant Access".
+You will need to add 
+In the New principals field, enter `allUsers`.
 
 In the Select a role drop down, select the Cloud Storage sub-menu, and click the Storage Object Viewer option.
 
