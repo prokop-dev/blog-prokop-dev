@@ -150,7 +150,86 @@ $ curl https://assets.prokop.dev/style.css -v > /dev/null
 < alt-svc: h3=":443"; ma=86400
 ```
 
+# Add Cors support
+
+When trying to consume files on web page in another domain, the following error is shown in console (and browser reject to render resource).
+
+```
+Access to script at 'https://assets.prokop.dev/js/bootstrap/5.3.3/js/bootstrap.bundle.min.js' from origin 'https://fizjoterapia.uk' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+pre-appointment:198 
+        
+GET https://assets.prokop.dev/js/bootstrap/5.3.3/js/bootstrap.bundle.min.js net::ERR_FAILED 200 (OK)
+
+Access to CSS stylesheet at 'https://assets.prokop.dev/js/bootstrap/5.3.3/css/bootstrap.min.css' from origin 'https://fizjoterapia.uk' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+        
+GET https://assets.prokop.dev/js/bootstrap/5.3.3/css/bootstrap.min.css net::ERR_FAILED 200 (OK)
+```
+
+This can be fixed by configuring CORS on Google Storage Bucket.
+First the following file needs to be created.
+
+```
+[
+    {
+      "origin": [
+        "https://fizjoterapia.uk",
+        "https://www.srihash.org"
+      ],
+      "method": ["GET"],
+      "responseHeader": ["Content-Type"],
+      "maxAgeSeconds": 3600
+    }
+]
+```
+
+Then run: `gcloud storage buckets update gs://assets.prokop.dev --cors-file=cors.config`.
+And test.
+
+```
+curl https://assets.prokop.dev/js/bootstrap/5.3.3/css/bootstrap.css -v -H "Origin: https://fizjoterapia.uk" > /dev/null
+> GET /js/bootstrap/5.3.3/css/bootstrap.css HTTP/2
+> Host: assets.prokop.dev
+> user-agent: curl/7.83.0
+> accept: */*
+> origin: https://fizjoterapia.uk
+>
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* old SSL session ID is stale, removing
+< HTTP/2 200
+< date: Thu, 21 Mar 2024 23:30:43 GMT
+< content-type: text/css
+< content-length: 281046
+< x-guploader-uploadid: ABPtcPrSlOwsjOUDBShOqZ2s2kX-i6cFnh_6GhisB1JVokDuDHrFSc9-To3vTmCE5Cb_DRz-FCnUT1m2oA
+< expires: Fri, 22 Mar 2024 00:12:28 GMT
+< cache-control: public, max-age=14400
+< last-modified: Thu, 21 Mar 2024 20:20:11 GMT
+< etag: "1162850e40492183d0df775907004258"
+< x-goog-generation: 1711052411059453
+< x-goog-metageneration: 1
+< x-goog-stored-content-encoding: identity
+< x-goog-stored-content-length: 281046
+< x-goog-hash: crc32c=FS109g==
+< x-goog-hash: md5=EWKFDkBJIYPQ33dZBwBCWA==
+< x-goog-storage-class: STANDARD
+< access-control-allow-origin: https://fizjoterapia.uk
+< access-control-expose-headers: Content-Length, Content-Type, Date, Server, Transfer-Encoding, X-GUploader-UploadID, X-Google-Trace
+< vary: Origin
+< cf-cache-status: HIT
+< age: 1095
+< accept-ranges: bytes
+< report-to: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=XDPyKRJiQHCb%2FRbFCxhXxI6KJWML4MT30TaDCJC2f%2FqbMmpZW2JLrgZfiv612WcTCYqKfr7IU0Hw0o%2FI4pLNtZTHsTXIYcecbCDGxG48d8FZxCD9GTjaefhvu4LGlnWbu8gXXw%3D%3D"}],"group":"cf-nel","max_age":604800}
+< nel: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+< strict-transport-security: max-age=31536000; includeSubDomains; preload
+< x-content-type-options: nosniff
+< server: cloudflare
+< cf-ray: 8681bb40ecbe76c9-LHR
+< alt-svc: h3=":443"; ma=86400
+```
+
 # Resources and references
 
 - https://cloud.google.com/storage/docs/hosting-static-website
 - https://cloud.google.com/storage/docs/request-endpoints
+- https://www.srihash.org/
+- https://cloud.google.com/storage/docs/cross-origin
