@@ -80,9 +80,12 @@ certbot certonly --dns-cloudflare --dns-cloudflare-credentials ~/.secrets/certbo
 Resulting certificate:
 ![certificate](https://assets.prokop.dev/qg/2024/08/WildcardCertificate.png)
 
-## Test if reneval will be successful
+And SAN extensions are as expected:
+![SAN](https://assets.prokop.dev/qg/2024/08/WildcardCertificateDetails.png)
 
-There is dry-run option to validate renawal of certificates:
+## Test if renewal will be successful
+
+There is dry-run option to validate renewal of certificates:
 
 ```bash
 # certbot renew --dry-run
@@ -106,6 +109,14 @@ Congratulations, all simulated renewals succeeded:
   /etc/letsencrypt/live/prokop.dev/fullchain.pem (success)
   /etc/letsencrypt/live/prokop.uk/fullchain.pem (success)
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+```
+
+## Automatic renewal
+
+Issue the following to enable certificates renewal prior to 30 days to expiry:
+
+```bash
+# systemctl enable --now certbot-renew.time
 ```
 
 ## Resources
