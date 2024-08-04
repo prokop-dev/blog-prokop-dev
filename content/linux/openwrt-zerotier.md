@@ -76,7 +76,7 @@ Now, you should be connected to the ZeroTier "Earth's Switch":
 
 ```bash
 zt******* Link encap:Ethernet  HWaddr AE:36:60:95:0D:95
-          inet6 addr: fe80::ac36:60ff:fe95:d95/64 Scope:Link
+          inet6 addr: fe80::____:____:____:____/64 Scope:Link
           UP BROADCAST RUNNING MULTICAST  MTU:2800  Metric:1
           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
           TX packets:7 errors:0 dropped:0 overruns:0 carrier:0
