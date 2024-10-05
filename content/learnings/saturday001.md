@@ -160,5 +160,93 @@ root@OpenWrt:~#
 Now just need to reinstall packages that were previously installed manually (sysupgrade cannot preserve installed packages).
 
 ```
-...
+opkg update
+opkg install zerotier
+
+sync
+reboot
+```
+
+## Interesting reading
+
+- https://blog.cloudflare.com/cloudflares-commitment-to-free/
+- 
+
+## ProtonVPN on OpenWrt with Wireguard
+
+The idea is to have second (WAN) provider via ProtonVPN to implement ideas of [Open Wireless]().
+First install wireguard.
+
+```
+root@OpenWrt:~# opkg install wireguard-tools
+
+Installing wireguard-tools (1.0.20210914-2) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/packages/mipsel_24kc/base/wireguard-tools_1.0.20210914-2_mipsel_24kc.ipk
+Installing kmod-crypto-lib-chacha20 (5.15.167-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/packages/kmod-crypto-lib-chacha20_5.15.167-1_mipsel_24kc.ipk
+Installing kmod-crypto-lib-poly1305 (5.15.167-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/packages/kmod-crypto-lib-poly1305_5.15.167-1_mipsel_24kc.ipk
+Installing kmod-crypto-lib-chacha20poly1305 (5.15.167-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/packages/kmod-crypto-lib-chacha20poly1305_5.15.167-1_mipsel_24kc.ipk
+Installing kmod-crypto-kpp (5.15.167-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/packages/kmod-crypto-kpp_5.15.167-1_mipsel_24kc.ipk
+Installing kmod-crypto-lib-curve25519 (5.15.167-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/packages/kmod-crypto-lib-curve25519_5.15.167-1_mipsel_24kc.ipk
+Installing kmod-udptunnel4 (5.15.167-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/packages/kmod-udptunnel4_5.15.167-1_mipsel_24kc.ipk
+Installing kmod-udptunnel6 (5.15.167-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/packages/kmod-udptunnel6_5.15.167-1_mipsel_24kc.ipk
+Installing kmod-wireguard (5.15.167-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/packages/kmod-wireguard_5.15.167-1_mipsel_24kc.ipk
+Configuring kmod-crypto-lib-chacha20.
+Configuring kmod-crypto-lib-poly1305.
+Configuring kmod-crypto-lib-chacha20poly1305.
+Configuring kmod-udptunnel4.
+Configuring kmod-udptunnel6.
+Configuring kmod-crypto-kpp.
+Configuring kmod-crypto-lib-curve25519.
+Configuring kmod-wireguard.
+Configuring wireguard-tools.
+```
+
+Create configuration on ProtonVPN side:
+
+```
+[Interface]
+# Key for OpenWrtMrowla
+# Bouncing = 1
+# NAT-PMP (Port Forwarding) = off
+# VPN Accelerator = on
+PrivateKey = <PrivateKey>
+Address = 10.2.0.2/32
+DNS = 10.2.0.1
+
+[Peer]
+# NL-FREE#753164
+PublicKey = <PublicKey>
+AllowedIPs = 0.0.0.0/0
+Endpoint = 185.x.y.z:51820
+```
+
+Use it to add a new section to `/etc/config/network`
+
+```
+config interface 'proton'
+        option proto 'wireguard'
+        option private_key '<PrivateKey>'
+        list addresses '10.2.0.2/32'
+
+config wireguard_proton
+        option public_key '<PublicKey>'
+        option endpoint_host '185.x.y.z'
+        option endpoint_port '51820'
+        list allowed_ips '0.0.0.0/0'
+```
+
+Reboot.
+After restart, I have logged to LuCi and noticed that in interfaces section, the Wireguard `proton` interface missed information ('missing proto').
+The following LuCi package, fixed the situation.
+
+```
+opkg install luci-proto-wireguard
 ```
