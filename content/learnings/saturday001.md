@@ -85,3 +85,80 @@ root@OpenWrt:/etc/config# uptime
 ```
 
 Usually on each visit, I reconfigure something on the router.
+
+## Upgrading OpenWRT to latest
+
+This was tested on EdgeRouter-X.
+
+```
+root@OpenWrt:~# cd /tmp/
+
+root@OpenWrt:/tmp# wget https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/openwrt-23.05.5-ramips-mt7621-ubnt_edgerouter-x-squashfs-sysupgrade.bin
+Downloading 'https://downloads.openwrt.org/releases/23.05.5/targets/ramips/mt7621/openwrt-23.05.5-ramips-mt7621-ubnt_edgerouter-x-squashfs-sysupgrade.bin'
+Connecting to 146.75.122.132:443
+Writing to 'openwrt-23.05.5-ramips-mt7621-ubnt_edgerouter-x-squashfs-sysupgrade.bin'
+openwrt-23.05.5-rami 100% |*******************************|  5400k  0:00:00 ETA
+Download completed (5530254 bytes)
+
+root@OpenWrt:/tmp# sha256sum openwrt-23.05.5-ramips-mt7621-ubnt_edgerouter-x-squashfs-sysupgrade.bin
+72e6aab18e5ad70cf2e8184d52450dcea20c65ced829790c928bd48ba4bb7724  openwrt-23.05.5-ramips-mt7621-ubnt_edgerouter-x-squashfs-sysupgrade.bin
+
+root@OpenWrt:/tmp# sysupgrade -v openwrt-23.05.5-ramips-mt7621-ubnt_edgerouter-x-squashfs-sysupgrade.bin
+Sat Oct  5 16:14:11 UTC 2024 upgrade: Saving config files...
+etc/config/dhcp
+etc/config/dropbear
+etc/config/firewall
+etc/config/luci
+etc/config/network
+etc/config/rpcd
+etc/config/system
+etc/config/ucitrack
+etc/config/uhttpd
+etc/config/zerotier
+etc/dropbear/authorized_keys
+etc/dropbear/dropbear_ed25519_host_key
+etc/dropbear/dropbear_rsa_host_key
+etc/group
+etc/hosts
+etc/inittab
+etc/luci-uploads/.placeholder
+etc/nftables.d/10-custom-filter-chains.nft
+etc/nftables.d/README
+etc/opkg/keys/b5043e70f9a75cde
+etc/passwd
+etc/profile
+etc/rc.local
+etc/shadow
+etc/shells
+etc/shinit
+etc/sysctl.conf
+etc/uhttpd.crt
+etc/uhttpd.key
+Sat Oct  5 16:14:11 UTC 2024 upgrade: Commencing upgrade. Closing all shell sessions.
+```
+
+And after few minutes, let's try to ssh again:
+
+```
+$ ssh root@192.168.33.1
+Enter passphrase for key '/c/Users/proko/.ssh/id_ed25519':
+
+
+BusyBox v1.36.1 (2024-09-23 12:34:46 UTC) built-in shell (ash)
+
+  _______                     ________        __
+ |       |.-----.-----.-----.|  |  |  |.----.|  |_
+ |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
+ |_______||   __|_____|__|__||________||__|  |____|
+          |__| W I R E L E S S   F R E E D O M
+ -----------------------------------------------------
+ OpenWrt 23.05.5, r24106-10cc5fcd00
+ -----------------------------------------------------
+root@OpenWrt:~#
+```
+
+Now just need to reinstall packages that were previously installed manually (sysupgrade cannot preserve installed packages).
+
+```
+...
+```
