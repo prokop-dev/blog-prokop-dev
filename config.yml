@@ -91,7 +91,7 @@ params:
     mainSections:
     - diy
     - java
-    - learnigns
+    - learnings
     - linux
     - posts
     env: production
