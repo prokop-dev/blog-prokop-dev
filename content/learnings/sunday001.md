@@ -35,7 +35,15 @@ I updated the PaperMod theme and got CloudFlare build failing with:
 ```
 
 The fix was simple, update to `HUGO_VERSION` veriable from `0.96.0` to `0.123.4`.
-Committing now, validate this...
+Committing now, validate this... Failed, now with:
+
+```
+ERROR The "twitter_simple" shortcode requires two named parameters: user and id. See "/opt/buildhome/repo/content/demo/rich-content.md:24:1"
+```
+
+Interestingly, I should have pay more attention to previous failure logs...
+It seems, I have some old "PaperMod demo" page using old "twitter_simple" shortcode.
+Just updated it to show one of my (dormant) Twitter account post.
 
 ## OpenWrt hostname
 
