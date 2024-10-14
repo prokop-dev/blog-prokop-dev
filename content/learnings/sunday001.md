@@ -18,6 +18,14 @@ cat /proc/cpuinfo | grep 'model name' | head -n 1
 model name      : Intel(R) Atom(TM) CPU  E3827  @ 1.74GHz
 ```
 
+### Changes in last git commit
+
+This is mega usefull to show last commit changes:
+
+```zsh
+git diff HEAD^ HEAD
+```
+
 ## Fixing this blog on CloudFlare pages
 
 I updated the PaperMod theme and got CloudFlare build failing with:
@@ -45,18 +53,100 @@ Interestingly, I should have pay more attention to previous failure logs...
 It seems, I have some old "PaperMod demo" page using old "twitter_simple" shortcode.
 Just updated it to show one of my (dormant) Twitter account post.
 
+The fix:
+```
+## Twitter Simple Shortcode
+-{{< twitter_simple 1085870671291310081 >}}
++{{< twitter user="bartprokop" id="1445337420967391235" >}}^M
+```
+
+It works now!
+
 ## OpenWrt hostname
 
 I'm in the process of aligning names of all my devices with my naming scheme.
 It is unlikely that I will have more than one router per location, so routers are simply named `rt-<LOC>`.
 That corresponds with following entry in `/etc/config/system`:
 
+```
+config system
+        option hostname 'rt-LOC'
+        option description 'Aguas Verdes Router'
+```
 
-rtr-mro
-rtr-bel
-rtr-ave
+After restart, the prompt is much more friendlier:
 
+```
+$ ssh root@rt-LOC.prokop.dev
 
-router-mro
-rtr-bel
-rtr-ave
+BusyBox v1.36.1 (2024-03-22 22:09:42 UTC) built-in shell (ash)
+  _______                     ________        __
+ |       |.-----.-----.-----.|  |  |  |.----.|  |_
+ |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
+ |_______||   __|_____|__|__||________||__|  |____|
+          |__| W I R E L E S S   F R E E D O M
+ -----------------------------------------------------
+ OpenWrt 23.05.3, r23809-234f1a2efa
+ -----------------------------------------------------
+root@rt-LOC:~# 
+```
+
+## Grafana for home needs
+
+Grafana Cloud might be really useful for monitoring smart home and home lab.
+Register here: [Grafana Cloud](https://grafana.com/auth/sign-in).
+
+## Getting MTA on OpenWRT
+
+Install `msmtp` package with sendmail symlink:
+
+```
+# opkg update
+# opkg install msmtp-mta
+Installing msmtp-mta (1.8.25-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/packages/mipsel_24kc/packages/msmtp-mta_1.8.25-1_mipsel_24kc.ipk
+Installing libgmp10 (6.2.1-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/packages/mipsel_24kc/base/libgmp10_6.2.1-1_mipsel_24kc.ipk
+Installing libnettle8 (3.9.1-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/packages/mipsel_24kc/base/libnettle8_3.9.1-1_mipsel_24kc.ipk
+Installing libgnutls (3.8.3-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/packages/mipsel_24kc/packages/libgnutls_3.8.3-1_mipsel_24kc.ipk
+Installing msmtp (1.8.25-1) to root...
+Downloading https://downloads.openwrt.org/releases/23.05.5/packages/mipsel_24kc/packages/msmtp_1.8.25-1_mipsel_24kc.ipk
+Configuring libgmp10.
+Configuring libnettle8.
+Configuring libgnutls.
+Configuring msmtp.
+Configuring msmtp-mta.
+```
+
+I have created new user Hermes Mercury <hermes.mercury@prokop.tld> on my Google Workspace account.
+Then I logged in and enabled 2FA.
+If you want to skip phone/secondary email verfication, add Google Authenticator prior to enabling 2FA.
+
+Now it is time to update `/etc/msmtprc`.
+
+```
+account default
+
+host smtp.gmail.com
+
+# Use TLS on port 465. On this port, TLS starts without STARTTLS.
+port 465
+auth on
+tls on
+tls_starttls off
+
+from hermes.mercury@prokop.tld
+user hermes.mercury@prokop.tld
+password <APP password>
+
+syslog LOG_MAIL
+```
+
+Then test it:
+
+```bash
+echo -e "Subject: Test mail\n\nThis is a test \"message\"." | sendmail "<bart@example.com>"
+```
+
