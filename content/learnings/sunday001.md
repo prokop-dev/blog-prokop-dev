@@ -150,3 +150,43 @@ Then test it:
 echo -e "Subject: Test mail\n\nThis is a test \"message\"." | sendmail "<bart@example.com>"
 ```
 
+Got it working (above basically was following receipe from OpenWrt.org) and the realised it should be tuned a bit.
+
+## Tuning msmtp on OpenWRT
+
+First I created file to alias every local account to my real email. `vi /etc/aliases.msmtp`:
+
+```
+default: my.real.email@example.com
+```
+
+Then made the following updates to `/etc/msmtprc`:
+
+```
+# A system wide configuration file.
+# It defines a default account.
+# This allows msmtp to be used like /usr/sbin/sendmail.
+
+# Set default values.
+defaults
+aliases /etc/aliases.msmtp
+syslog LOG_MAIL
+
+# Gmail configuration that works with 2FA and an app password.
+# Use TLS on port 465. On this port, TLS starts without STARTTLS.
+account gmail
+host smtp.gmail.com
+port 465
+auth on
+tls on
+tls_starttls off
+from_full_name Apartment Router
+from home.lab@gmail.com
+user home.lab@gmail.com
+password abcd efgh ijkl mnop
+
+# Select the default account
+account default : gmail
+```
+
+Last part was deploing the above setup across all three fixed and two mobile routers.
