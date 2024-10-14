@@ -56,8 +56,8 @@ Just updated it to show one of my (dormant) Twitter account post.
 The fix:
 ```
 ## Twitter Simple Shortcode
--{{< twitter_simple 1085870671291310081 >}}
-+{{< twitter user="bartprokop" id="1445337420967391235" >}}^M
+-twitter_simple 1085870671291310081
++twitter user="bartprokop" id="1445337420967391235"
 ```
 
 It works now!
