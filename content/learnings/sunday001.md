@@ -150,7 +150,7 @@ Then test it:
 echo -e "Subject: Test mail\n\nThis is a test \"message\"." | sendmail "<bart@example.com>"
 ```
 
-Got it working (above basically was following receipe from OpenWrt.org) and the realised it should be tuned a bit.
+Got it working (above basically was following receipe from OpenWrt.org) and then realised it should be tuned a bit.
 
 ## Tuning msmtp on OpenWRT
 
@@ -190,3 +190,4 @@ account default : gmail
 ```
 
 Last part was deploing the above setup across all three fixed and two mobile routers.
+Also, I've updated article on [OpenWrt Wiki](https://openwrt.org/docs/guide-user/services/email/smtp.client).
