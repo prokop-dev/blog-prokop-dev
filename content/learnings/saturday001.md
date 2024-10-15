@@ -250,3 +250,24 @@ The following LuCi package, fixed the situation.
 ```
 opkg install luci-proto-wireguard
 ```
+
+To test wireguard tunnel, `traceroute -i` command can be used:
+
+```
+root@rt-xyz:~# traceroute one.one.one.one
+traceroute to one.one.one.one (1.0.0.1), 30 hops max, 46 byte packets
+ 1  xxx.xxx.xx.x (xxx.xxx.xx.x)  1.128 ms  0.939 ms  1.251 ms
+ 2  2.internet.nexet.pl (185.239.40.2)  1.917 ms  1.768 ms  1.325 ms
+ 3  cloudflare.ip4.op.waw.epix.net.pl (89.46.144.83)  8.103 ms  14.546 ms  18.023 ms
+ 4  162.158.100.17 (162.158.100.17)  7.965 ms  162.158.100.9 (162.158.100.9)  8.805 ms  162.158.100.17 (162.158.100.17)  7.704 ms
+ 5  one.one.one.one (1.0.0.1)  8.231 ms  8.346 ms  7.555 ms
+
+root@rt-xyz:~# traceroute -i proton one.one.one.one
+traceroute to one.one.one.one (1.0.0.1), 30 hops max, 46 byte packets
+ 1  10.2.0.1 (10.2.0.1)  36.932 ms  36.844 ms  36.867 ms
+ 2  185.107.80.254 (185.107.80.254)  48.968 ms  38.513 ms  76.195 ms
+ 3  185.107.116.21 (185.107.116.21)  39.280 ms  185.107.116.22 (185.107.116.22)  39.841 ms  185.107.116.21 (185.107.116.21)  52.695 ms
+ 4  141.101.65.30 (141.101.65.30)  40.447 ms  141.101.65.26 (141.101.65.26)  57.482 ms  141.101.65.30 (141.101.65.30)  41.357 ms
+ 5  141.101.65.105 (141.101.65.105)  40.846 ms  141.101.65.95 (141.101.65.95)  40.684 ms  141.101.65.105 (141.101.65.105)  41.805 ms
+ 6  one.one.one.one (1.0.0.1)  40.374 ms  39.897 ms  39.081 ms
+```
