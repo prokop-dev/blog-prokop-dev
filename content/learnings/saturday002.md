@@ -1,5 +1,5 @@
 ---
-title: "Saturday, 5th October 2024"
+title: "Saturday, 19th October 2024"
 date: 2024-10-19T19:19:19Z
 draft: false
 author: "Bart Prokop"
