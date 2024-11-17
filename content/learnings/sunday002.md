@@ -1,6 +1,6 @@
 ---
 title: "Sunday, 17th November 2024"
-date: 2024-10-17T17:17:17Z
+date: 2024-11-17T17:17:17Z
 draft: false
 author: "Bart Prokop"
 description: "Post Holiday Fixes"
