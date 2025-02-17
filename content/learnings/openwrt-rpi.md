@@ -96,6 +96,40 @@ config zone
 	option forward		ACCEPT
 ```
 
+Finally, I've added firewall rule for ZeroTier. While ZeroTier can punch firewall using UDP, opening firewall makes things a bit easier.
+
+```
+config rule
+	option name		ZeroTier-Inbound
+	option src		wan
+	option proto		udp
+	option dest_port	9993
+	option target		ACCEPT
+```
+
+### VLANs - LAN, Guest and IoT networks
+
+RPi has no built in switch, so I prefer to directly define VLAN on the interface, over using complicated DSA config style.
+I will also use IPv6 hint matching VLAN and set the prefix length to 64 bits. It gives me parity with my IPv4 numbering scheme.
+
+```
+config interface 'guest'
+        option device   'eth0.5'
+        option proto    'static'
+        option ipaddr   '192.168.5.1'
+        option netmask  '255.255.255.0'
+        option ip6assign '64'
+        option ip6hint  '5'
+
+config interface 'iot'
+        option device   'eth0.7'
+        option proto    'static'
+        option ipaddr   '192.168.7.1'
+        option netmask  '255.255.255.0'
+        option ip6assign '64'
+        option ip6hint  '7'
+```
+
 ## Static Leases with OpenWrt
 
 I have finally got PoE managed switch in Aguas Verdes.
@@ -116,7 +150,18 @@ config host
 Curated list of all packages that I installed.
 
 ```
-opkg install owut
-
 # opkg install kmod-usb-net-rtl8152 zerotier
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
