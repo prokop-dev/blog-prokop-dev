@@ -82,7 +82,7 @@ I need to migrate off EdgeRouter Lite to RPi with OpenWRT ASAP.
 
 ## Static Leases with OpenWrt
 
-I have finally got PoE managed switch in Aguas Verdes.
+I have finally got PoE managed switch in [Aguas Verdes](https://fuerta.uk/).
 It is now imperative to assign to it deterministic IP address, so I can manage it remotely.
 
 ```
